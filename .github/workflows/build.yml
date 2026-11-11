@@ -25,7 +25,7 @@ jobs:
 
       - name: Build mod
         working-directory: mod
-        run: bash ./gradlew build --stacktrace
+        run: bash ./gradlew parityTest build -x test --stacktrace
 
       - name: Upload mod JAR
         uses: actions/upload-artifact@v4
