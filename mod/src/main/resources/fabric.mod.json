@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "bbh",
+  "version": "${version}",
+  "name": "bbh - Baritone but human",
+  "description": "A small learned motor policy (trained on human VPT gameplay) that plays like a person and can hand tasks to Baritone.",
+  "authors": ["5ivesaw"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["dev.bbh.agent.Main"]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": ">=26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "baritone": "*"
+  }
+}

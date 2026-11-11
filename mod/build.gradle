@@ -1,0 +1,65 @@
+plugins {
+    // Plugin id for unobfuscated Minecraft (26.1 and newer), per the Fabric Loom docs.
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // ONNX Runtime (CPU). The jar carries native libraries for Windows, Linux and macOS and is bundled into the mod jar.
+    implementation "com.microsoft.onnxruntime:onnxruntime:${project.onnx_version}"
+    include "com.microsoft.onnxruntime:onnxruntime:${project.onnx_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 25
+    it.options.encoding = "UTF-8"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+// Pure-Java check of the encoders against fixtures produced by the Python reference (no Minecraft needed):
+//   ./gradlew parityTest
+sourceSets {
+    test {
+        java.srcDir 'src/test/java'
+    }
+}
+tasks.register('parityTest', JavaExec) {
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.bbh.agent.core.ParityTest'
+    args = ["${rootDir}/../tests/fixtures/parity.json", "${rootDir}/../contract/spec.json"]
+    dependsOn tasks.named('testClasses')
+}
+
+// Bundle a trained model into the jar if one is present at mod/model/ (policy.onnx, spec.json, vocab.json,
+// goal_blocks.json). Files in .minecraft/config/bbh/ take precedence over the bundled copy at runtime.
+processResources {
+    from("${projectDir}/model") {
+        include '*.onnx', '*.json'
+        into 'bbh_model'
+    }
+}

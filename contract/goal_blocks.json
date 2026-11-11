@@ -1,0 +1,17 @@
+{
+  "log": ["oak_log", "birch_log", "spruce_log", "jungle_log", "acacia_log", "dark_oak_log", "mangrove_log", "cherry_log"],
+  "cobblestone": ["stone", "cobblestone"],
+  "stone": ["stone"],
+  "dirt": ["dirt", "grass_block"],
+  "sand": ["sand"],
+  "gravel": ["gravel"],
+  "coal": ["coal_ore", "deepslate_coal_ore"],
+  "iron_ore": ["iron_ore", "deepslate_iron_ore"],
+  "raw_iron": ["iron_ore", "deepslate_iron_ore"],
+  "gold_ore": ["gold_ore", "deepslate_gold_ore"],
+  "diamond": ["diamond_ore", "deepslate_diamond_ore"],
+  "redstone": ["redstone_ore", "deepslate_redstone_ore"],
+  "sapling": ["oak_leaves", "birch_leaves", "spruce_leaves"],
+  "wheat_seeds": ["short_grass", "tall_grass"],
+  "clay_ball": ["clay"]
+}

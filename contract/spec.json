@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "img_size": 64,
+  "stride": 2,
+  "keys": ["forward", "back", "left", "right", "jump", "sneak", "sprint", "attack", "use"],
+  "hotbar_classes": 10,
+  "camera": {
+    "bins": 21,
+    "max_deg": 20.0,
+    "mu": 10.0,
+    "invalid_deg": 45.0
+  },
+  "state": {
+    "hotbar_slots": 9,
+    "inventory_count_cap": 512
+  },
+  "goal": {
+    "horizon_steps": 150,
+    "none_id": 0,
+    "dropout": 0.25
+  },
+  "vocab_size": 64,
+  "gru_hidden": 256,
+  "run_hz": 10
+}
