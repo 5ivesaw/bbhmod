@@ -10,7 +10,7 @@ import dev.bbh.agent.core.Spec;
 import dev.bbh.agent.core.Vocab;
 import dev.bbh.agent.runtime.OnnxPolicy;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -55,50 +55,50 @@ public final class Main implements ClientModInitializer {
             if (controller != null) controller.onClientTick();
         });
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(
-                ClientCommandManager.literal("bbh")
-                        .then(ClientCommandManager.literal("start").executes(c -> run(c.getSource(), () -> {
+                ClientCommands.literal("bbh")
+                        .then(ClientCommands.literal("start").executes(c -> run(c.getSource(), () -> {
                             controller.start();
                             return "started (" + controller.status() + ")";
                         })))
-                        .then(ClientCommandManager.literal("stop").executes(c -> run(c.getSource(), () -> {
+                        .then(ClientCommands.literal("stop").executes(c -> run(c.getSource(), () -> {
                             controller.stop("user command");
                             return "stopped";
                         })))
-                        .then(ClientCommandManager.literal("status").executes(c -> run(c.getSource(), () -> controller.status())))
-                        .then(ClientCommandManager.literal("goal").then(ClientCommandManager.argument("item", StringArgumentType.word())
+                        .then(ClientCommands.literal("status").executes(c -> run(c.getSource(), () -> controller.status())))
+                        .then(ClientCommands.literal("goal").then(ClientCommands.argument("item", StringArgumentType.word())
                                 .executes(c -> run(c.getSource(), () -> {
                                     String item = StringArgumentType.getString(c, "item");
                                     return controller.setGoal(item) ? "goal = " + controller.goalName()
                                             : "'" + item + "' is not in this model's vocabulary";
                                 }))))
-                        .then(ClientCommandManager.literal("mode").then(ClientCommandManager.argument("mode", StringArgumentType.word())
+                        .then(ClientCommands.literal("mode").then(ClientCommands.argument("mode", StringArgumentType.word())
                                 .executes(c -> run(c.getSource(), () -> {
                                     String m = StringArgumentType.getString(c, "mode").toUpperCase();
                                     controller.mode(AgentController.Mode.valueOf(m));
                                     return "mode = " + controller.mode();
                                 }))))
-                        .then(ClientCommandManager.literal("greedy").then(ClientCommandManager.argument("on", StringArgumentType.word())
+                        .then(ClientCommands.literal("greedy").then(ClientCommands.argument("on", StringArgumentType.word())
                                 .executes(c -> run(c.getSource(), () -> {
                                     controller.decoder().greedy = Boolean.parseBoolean(StringArgumentType.getString(c, "on"));
                                     return "greedy = " + controller.decoder().greedy;
                                 }))))
-                        .then(ClientCommandManager.literal("temp").then(ClientCommandManager.argument("keys", DoubleArgumentType.doubleArg(0.05, 5))
-                                .then(ClientCommandManager.argument("camera", DoubleArgumentType.doubleArg(0.05, 5))
+                        .then(ClientCommands.literal("temp").then(ClientCommands.argument("keys", DoubleArgumentType.doubleArg(0.05, 5))
+                                .then(ClientCommands.argument("camera", DoubleArgumentType.doubleArg(0.05, 5))
                                         .executes(c -> run(c.getSource(), () -> {
                                             controller.decoder().keyTemperature = DoubleArgumentType.getDouble(c, "keys");
                                             controller.decoder().camTemperature = DoubleArgumentType.getDouble(c, "camera");
                                             return "temperatures set";
                                         })))))
-                        .then(ClientCommandManager.literal("channels").then(ClientCommandManager.argument("order", StringArgumentType.word())
+                        .then(ClientCommands.literal("channels").then(ClientCommands.argument("order", StringArgumentType.word())
                                 .executes(c -> run(c.getSource(), () -> {
                                     frames.order = AreaResize.Order.valueOf(StringArgumentType.getString(c, "order").toUpperCase());
                                     return "channel order = " + frames.order;
                                 }))))
-                        .then(ClientCommandManager.literal("dumpframe").executes(c -> run(c.getSource(), this::dumpFrame)))
-                        .then(ClientCommandManager.literal("goto")
-                                .then(ClientCommandManager.argument("x", IntegerArgumentType.integer())
-                                        .then(ClientCommandManager.argument("y", IntegerArgumentType.integer())
-                                                .then(ClientCommandManager.argument("z", IntegerArgumentType.integer())
+                        .then(ClientCommands.literal("dumpframe").executes(c -> run(c.getSource(), this::dumpFrame)))
+                        .then(ClientCommands.literal("goto")
+                                .then(ClientCommands.argument("x", IntegerArgumentType.integer())
+                                        .then(ClientCommands.argument("y", IntegerArgumentType.integer())
+                                                .then(ClientCommands.argument("z", IntegerArgumentType.integer())
                                                         .executes(c -> run(c.getSource(), () -> baritone.gotoBlock(
                                                                 IntegerArgumentType.getInteger(c, "x"),
                                                                 IntegerArgumentType.getInteger(c, "y"),

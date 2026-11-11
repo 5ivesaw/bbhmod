@@ -40,7 +40,7 @@ public final class FrameGrabber implements AutoCloseable {
     public void request() {
         if (!inFlight.compareAndSet(false, true)) return;
         try {
-            Screenshot.takeScreenshot(Minecraft.getInstance().getMainRenderTarget(), this::onImage);
+            Screenshot.takeScreenshot(Minecraft.getInstance().gameRenderer.mainRenderTarget(), this::onImage);
         } catch (Throwable t) {
             lastError = t.toString();
             inFlight.set(false);

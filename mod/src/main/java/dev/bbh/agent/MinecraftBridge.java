@@ -5,7 +5,6 @@ import dev.bbh.agent.core.Snapshot;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.EntityHitResult;
@@ -33,7 +32,7 @@ public final class MinecraftBridge {
     }
 
     public boolean guiOpen() {
-        return mc.screen != null;
+        return mc.gui.screen() != null;
     }
 
     public boolean mouseGrabbed() {
@@ -54,7 +53,7 @@ public final class MinecraftBridge {
             String name = Canon.item(BuiltInRegistries.ITEM.getKey(st.getItem()).getPath());
             counts.merge(name, st.getCount(), Integer::sum);
         }
-        return new Snapshot(inv.getSelectedSlot(), p.getXRot(), p.getYRot(), mc.screen != null, counts);
+        return new Snapshot(inv.getSelectedSlot(), p.getXRot(), p.getYRot(), mc.gui.screen() != null, counts);
     }
 
     public double[] position() {
@@ -81,7 +80,6 @@ public final class MinecraftBridge {
         HitResult hit = mc.hitResult;
         if (k[7] && !prevAttack && hit instanceof EntityHitResult e) {
             mc.gameMode.attack(mc.player, e.getEntity());
-            mc.player.swing(InteractionHand.MAIN_HAND);
         }
         prevAttack = k[7];
     }
